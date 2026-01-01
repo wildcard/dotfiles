@@ -228,9 +228,24 @@ setopt HIST_REDUCE_BLANKS       # Remove superfluous blanks
 # PROMPT CUSTOMIZATION
 # ==========================================
 
-# Add AWS profile to prompt if available
-if command -v aws &> /dev/null; then
-    RPROMPT='${AWS_PROFILE:+[aws:$AWS_PROFILE]}'
+# Use Starship prompt if available, otherwise fallback to robbyrussell
+if command -v starship &>/dev/null; then
+    # Starship config location
+    export STARSHIP_CONFIG="${ZDOTDIR:-$HOME}/config/starship.toml"
+    eval "$(starship init zsh)"
+else
+    # Fallback: Add AWS profile to prompt if available
+    if command -v aws &> /dev/null; then
+        RPROMPT='${AWS_PROFILE:+[aws:$AWS_PROFILE]}'
+    fi
+fi
+
+# ==========================================
+# ZOXIDE INITIALIZATION
+# ==========================================
+
+if command -v zoxide &>/dev/null; then
+    eval "$(zoxide init zsh)"
 fi
 
 # ==========================================
