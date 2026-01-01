@@ -141,6 +141,7 @@ if [[ -d "$DOTFILES_CONFIG" ]]; then
         "kubernetes.zsh"  # Kubernetes helpers
         "node.zsh"        # Node.js/FNM setup
         "python.zsh"      # Python/Pyenv setup
+        "mise.zsh"        # mise runtime manager (optional)
     )
 
     for config_file in "${config_files[@]}"; do

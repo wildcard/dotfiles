@@ -167,9 +167,10 @@
 
 	# Delta configuration (syntax-highlighting pager for git)
 	navigate = true
+	light = false
 	side-by-side = true
 	line-numbers = true
-	syntax-theme = Solarized (dark)
+	syntax-theme = Dracula
 
 [push]
 
