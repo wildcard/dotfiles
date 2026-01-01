@@ -25,6 +25,17 @@ if [[ ! -f "$HOME/.secrets" ]]; then
 fi
 
 # ==========================================
+# ENVIRONMENT DETECTION
+# ==========================================
+
+# Detect GitHub Codespaces
+if [[ -n "${CODESPACES:-}" ]]; then
+    export IS_CODESPACE=true
+    export BROWSER="echo"  # Disable browser opening in Codespaces
+    echo "☁️  Running in GitHub Codespaces"
+fi
+
+# ==========================================
 # OH MY ZSH CONFIGURATION
 # ==========================================
 
@@ -35,21 +46,38 @@ export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="robbyrussell"
 
 # Plugins for productivity and development
-plugins=(
-    git
-    aws
-    docker
-    kubectl
-    terraform
-    python
-    node
-    z
-    tmux
-    1password
-    ssh-agent
-    zsh-autosuggestions
-    zsh-syntax-highlighting
-)
+# Note: 1password and ssh-agent plugins are macOS-specific and excluded in Codespaces
+if [[ "${IS_CODESPACE:-false}" == "true" ]]; then
+    plugins=(
+        git
+        aws
+        docker
+        kubectl
+        terraform
+        python
+        node
+        z
+        tmux
+        zsh-autosuggestions
+        zsh-syntax-highlighting
+    )
+else
+    plugins=(
+        git
+        aws
+        docker
+        kubectl
+        terraform
+        python
+        node
+        z
+        tmux
+        1password
+        ssh-agent
+        zsh-autosuggestions
+        zsh-syntax-highlighting
+    )
+fi
 
 # SSH-Agent configuration
 zstyle :omz:plugins:ssh-agent agent-forwarding yes
@@ -70,8 +98,11 @@ fi
 if [[ -d "/opt/homebrew" ]]; then
     # Apple Silicon
     export HOMEBREW_PREFIX="/opt/homebrew"
+elif [[ -d "/home/linuxbrew/.linuxbrew" ]]; then
+    # Linux Homebrew (Codespaces/WSL)
+    export HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
 elif [[ -d "/usr/local" ]]; then
-    # Intel
+    # Intel Mac or standard Linux
     export HOMEBREW_PREFIX="/usr/local"
 fi
 

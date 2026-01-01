@@ -21,7 +21,7 @@ brew install moreutils
 # Install GNU `find`, `locate`, `updatedb`, and `xargs`, `g`-prefixed.
 brew install findutils
 # Install GNU `sed`, overwriting the built-in `sed`.
-brew install gnu-sed --with-default-names
+brew install gnu-sed
 # Install a modern version of Bash.
 brew install bash
 brew install bash-completion2
@@ -32,14 +32,14 @@ if ! fgrep -q "${BREW_PREFIX}/bin/bash" /etc/shells; then
   chsh -s "${BREW_PREFIX}/bin/bash";
 fi;
 
-# Install `wget` with IRI support.
-brew install wget --with-iri
+# Install `wget`.
+brew install wget
 
 # Install GnuPG to enable PGP-signing commits.
 brew install gnupg
 
 # Install more recent versions of some macOS tools.
-brew install vim --with-override-system-vi
+brew install vim
 brew install grep
 brew install openssh
 brew install screen
@@ -84,7 +84,7 @@ brew install ack
 brew install git
 brew install git-lfs
 brew install gs
-brew install imagemagick --with-webp
+brew install imagemagick
 brew install lua
 brew install lynx
 brew install p7zip
@@ -96,6 +96,19 @@ brew install ssh-copy-id
 brew install tree
 brew install vbindiff
 brew install zopfli
+
+# Install modern CLI tools (Rust-based replacements for classic tools).
+brew install ripgrep    # Fast grep replacement
+brew install bat        # Better cat with syntax highlighting
+brew install fd         # Fast find replacement
+brew install fzf        # Fuzzy finder
+brew install eza        # Modern ls replacement (successor to exa)
+brew install git-delta  # Better git diff viewer
+brew install jq         # JSON processor
+brew install httpie     # User-friendly HTTP client
+
+# Install fzf key bindings and fuzzy completion
+$(brew --prefix)/opt/fzf/install --all --no-bash --no-fish
 
 # Remove outdated versions from the cellar.
 brew cleanup

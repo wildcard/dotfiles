@@ -342,6 +342,55 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
 fi
 
 # ==========================================
+# MODERN CLI TOOL ALIASES
+# ==========================================
+
+# eza (modern ls replacement with git integration)
+if command -v eza &>/dev/null; then
+    alias ls="eza --icons --group-directories-first"
+    alias l="eza -l --icons --group-directories-first"
+    alias la="eza -la --icons --group-directories-first"
+    alias ll="eza -l --icons --group-directories-first"
+    alias lt="eza -T --icons --level=2"  # Tree view 2 levels deep
+    alias lta="eza -Ta --icons --level=2 --git-ignore"  # Tree with hidden files
+    alias lg="eza -l --icons --group-directories-first --git"  # Show git status
+fi
+
+# bat (modern cat with syntax highlighting)
+if command -v bat &>/dev/null; then
+    alias cat="bat --paging=never"
+    alias catp="bat"  # cat with paging
+    alias bathelp="bat --plain --language=help"
+    # Use bat for man pages with syntax highlighting
+    export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+    export MANROFFOPT="-c"
+fi
+
+# fd (modern find replacement)
+if command -v fd &>/dev/null; then
+    alias find="fd"
+fi
+
+# ripgrep (fast grep replacement)
+if command -v rg &>/dev/null; then
+    alias grep="rg"
+    alias rgi="rg -i"  # Case insensitive search
+    alias rgf="rg --files"  # Just list files that would be searched
+    alias rgl="rg --files-with-matches"  # List files containing matches
+fi
+
+# delta (better git diff)
+if command -v delta &>/dev/null; then
+    alias diff="delta"
+fi
+
+# httpie (user-friendly HTTP client)
+if command -v http &>/dev/null; then
+    alias curl="http"  # Replace curl with httpie for better UX
+    alias https="https"  # HTTPS variant
+fi
+
+# ==========================================
 # SAFETY OVERRIDES
 # ==========================================
 

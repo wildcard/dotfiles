@@ -239,9 +239,39 @@ export TMUX_TMPDIR="$HOME/.tmux/tmp"
 # FZF settings (if installed)
 if command -v fzf &> /dev/null; then
     export FZF_DEFAULT_OPTS="--height 40% --border --layout=reverse --info=inline"
-    export FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude .git"
-    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-    export FZF_ALT_C_COMMAND="fd --type d --hidden --follow --exclude .git"
+
+    # Use fd for file/directory finding if available
+    if command -v fd &> /dev/null; then
+        export FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude .git"
+        export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+        export FZF_ALT_C_COMMAND="fd --type d --hidden --follow --exclude .git"
+    fi
+
+    # Use bat for file preview if available
+    if command -v bat &> /dev/null; then
+        export FZF_CTRL_T_OPTS="--preview 'bat --color=always --style=numbers --line-range=:500 {}'"
+        export FZF_ALT_C_OPTS="--preview 'eza -T --icons --level=2 {} 2>/dev/null || ls -la {}'"
+    fi
+fi
+
+# ==========================================
+# BAT CONFIGURATION
+# ==========================================
+
+# bat (modern cat with syntax highlighting)
+if command -v bat &> /dev/null; then
+    export BAT_THEME="Solarized (dark)"
+    export BAT_STYLE="numbers,changes,header"
+    export BAT_PAGER="less -RF"
+fi
+
+# ==========================================
+# DELTA CONFIGURATION
+# ==========================================
+
+# delta (better git diff viewer)
+if command -v delta &> /dev/null; then
+    export DELTA_PAGER="less -R"
 fi
 
 # ==========================================

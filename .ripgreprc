@@ -1,0 +1,28 @@
+# Ripgrep configuration file
+# https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md#configuration-file
+
+# Search behavior
+--smart-case
+--hidden
+--follow
+
+# Ignore patterns
+--glob=!.git/*
+--glob=!node_modules/*
+--glob=!vendor/*
+--glob=!*.min.js
+--glob=!*.min.css
+--glob=!package-lock.json
+--glob=!yarn.lock
+--glob=!*.pyc
+--glob=!__pycache__/*
+--glob=!.DS_Store
+
+# Colors
+--colors=line:fg:yellow
+--colors=line:style:bold
+--colors=path:fg:green
+--colors=path:style:bold
+--colors=match:fg:black
+--colors=match:bg:yellow
+--colors=match:style:nobold

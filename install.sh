@@ -17,6 +17,12 @@ DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BACKUP_DIR="$HOME/.dotfiles_backup_$(date +%Y%m%d_%H%M%S)"
 LOG_FILE="$HOME/.dotfiles_install.log"
 
+# Interactive mode: auto-disable in CI/Codespaces environments
+INTERACTIVE="${INTERACTIVE:-true}"
+if [[ -n "${CODESPACES:-}" ]] || [[ -n "${CI:-}" ]] || [[ ! -t 0 ]]; then
+    INTERACTIVE="false"
+fi
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -46,6 +52,11 @@ log() {
         *)         echo "$message" ;;
     esac
 }
+
+# Log non-interactive mode detection
+if [[ "$INTERACTIVE" == "false" ]]; then
+    log "INFO" "Running in non-interactive mode (CI/Codespaces detected)"
+fi
 
 # ==========================================
 # SECURITY FUNCTIONS
@@ -99,11 +110,15 @@ scan_for_secrets() {
         log "WARN" "Potential secrets detected in existing files!"
         log "WARN" "Please review your existing dotfiles for exposed credentials"
 
-        read -p "Continue anyway? (y/N): " -n 1 -r
-        echo
-        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-            log "INFO" "Installation cancelled"
-            exit 1
+        if [[ "$INTERACTIVE" == "true" ]]; then
+            read -p "Continue anyway? (y/N): " -n 1 -r
+            echo
+            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+                log "INFO" "Installation cancelled"
+                exit 1
+            fi
+        else
+            log "WARN" "Non-interactive mode: proceeding despite potential secrets"
         fi
     else
         log "SUCCESS" "No obvious secrets found in existing files"
@@ -341,13 +356,21 @@ configure_git() {
 
     # Check if user info is set
     if ! git config --global user.name &>/dev/null; then
-        read -p "Enter your Git name: " git_name
-        git config --global user.name "$git_name"
+        if [[ "$INTERACTIVE" == "true" ]]; then
+            read -p "Enter your Git name: " git_name
+            git config --global user.name "$git_name"
+        else
+            log "INFO" "Skipping Git user.name configuration (non-interactive mode)"
+        fi
     fi
 
     if ! git config --global user.email &>/dev/null; then
-        read -p "Enter your Git email: " git_email
-        git config --global user.email "$git_email"
+        if [[ "$INTERACTIVE" == "true" ]]; then
+            read -p "Enter your Git email: " git_email
+            git config --global user.email "$git_email"
+        else
+            log "INFO" "Skipping Git user.email configuration (non-interactive mode)"
+        fi
     fi
 
     log "SUCCESS" "Git configured"
@@ -367,12 +390,16 @@ install_dev_tools() {
         IFS=':' read -r tool_name tool_desc tool_install <<< "$tool_info"
 
         if ! command -v "$tool_name" &>/dev/null; then
-            read -p "Install $tool_desc? (y/N): " -n 1 -r
-            echo
-            if [[ $REPLY =~ ^[Yy]$ ]]; then
-                log "INFO" "Installing $tool_desc..."
-                eval "$tool_install"
-                log "SUCCESS" "$tool_desc installed"
+            if [[ "$INTERACTIVE" == "true" ]]; then
+                read -p "Install $tool_desc? (y/N): " -n 1 -r
+                echo
+                if [[ $REPLY =~ ^[Yy]$ ]]; then
+                    log "INFO" "Installing $tool_desc..."
+                    eval "$tool_install"
+                    log "SUCCESS" "$tool_desc installed"
+                fi
+            else
+                log "INFO" "Skipping $tool_desc installation (non-interactive mode)"
             fi
         else
             log "INFO" "$tool_desc already installed"
@@ -386,29 +413,35 @@ set_default_shell() {
 
     if [[ "$current_shell" != "zsh" ]]; then
         log "INFO" "Current shell is $current_shell"
-        read -p "Set Zsh as your default shell? (y/N): " -n 1 -r
-        echo
 
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
-            local zsh_path
-            if command -v zsh &>/dev/null; then
-                zsh_path=$(which zsh)
+        if [[ "$INTERACTIVE" == "true" ]]; then
+            read -p "Set Zsh as your default shell? (y/N): " -n 1 -r
+            echo
 
-                # Add zsh to /etc/shells if not present
-                if ! grep -q "$zsh_path" /etc/shells 2>/dev/null; then
-                    log "INFO" "Adding Zsh to /etc/shells (requires sudo)"
-                    echo "$zsh_path" | sudo tee -a /etc/shells >/dev/null
+            if [[ $REPLY =~ ^[Yy]$ ]]; then
+                local zsh_path
+                if command -v zsh &>/dev/null; then
+                    zsh_path=$(which zsh)
+
+                    # Add zsh to /etc/shells if not present
+                    if ! grep -q "$zsh_path" /etc/shells 2>/dev/null; then
+                        log "INFO" "Adding Zsh to /etc/shells (requires sudo)"
+                        echo "$zsh_path" | sudo tee -a /etc/shells >/dev/null
+                    fi
+
+                    # Change default shell
+                    log "INFO" "Changing default shell to Zsh (requires sudo)"
+                    sudo chsh -s "$zsh_path" "$USER"
+
+                    log "SUCCESS" "Default shell changed to Zsh"
+                    log "INFO" "You may need to restart your terminal or log out/in"
+                else
+                    log "ERROR" "Zsh not found in PATH"
                 fi
-
-                # Change default shell
-                log "INFO" "Changing default shell to Zsh (requires sudo)"
-                sudo chsh -s "$zsh_path" "$USER"
-
-                log "SUCCESS" "Default shell changed to Zsh"
-                log "INFO" "You may need to restart your terminal or log out/in"
-            else
-                log "ERROR" "Zsh not found in PATH"
             fi
+        else
+            log "INFO" "Skipping shell change (non-interactive mode)"
+            log "INFO" "Zsh should already be configured by the devcontainer"
         fi
     else
         log "INFO" "Zsh is already your default shell"
