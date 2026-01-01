@@ -33,6 +33,63 @@ else
     alias ll="ls -lG"
 fi
 
+# ==========================================
+# MODERN CLI TOOLS (with smart fallbacks)
+# ==========================================
+
+# eza (modern ls replacement)
+if command -v eza &>/dev/null; then
+    alias ls="eza --icons --group-directories-first"
+    alias l="eza -l --icons --group-directories-first"
+    alias la="eza -la --icons --group-directories-first"
+    alias ll="eza -l --icons --group-directories-first"
+    alias lt="eza --tree --level=2 --icons"
+    alias lta="eza --tree --level=2 --icons -a"
+fi
+
+# bat (better cat with syntax highlighting)
+if command -v bat &>/dev/null; then
+    alias cat="bat --paging=never"
+    alias catp="bat"  # with pager
+    alias catl="bat --style=plain"  # plain output
+fi
+
+# fd (faster find)
+if command -v fd &>/dev/null; then
+    alias find="fd"
+    alias ffind="/usr/bin/find"  # fallback to real find
+fi
+
+# procs (better ps)
+if command -v procs &>/dev/null; then
+    alias pss="procs"
+    alias pst="procs --tree"
+fi
+
+# bottom (better top/htop)
+if command -v btm &>/dev/null; then
+    alias top="btm"
+    alias htop="btm"
+fi
+
+# zoxide (smarter cd)
+if command -v zoxide &>/dev/null; then
+    alias cd="z"
+    alias cdi="zi"  # interactive
+fi
+
+# ripgrep aliases (already installed)
+if command -v rg &>/dev/null; then
+    alias grep="rg"
+    alias rgi="rg -i"  # case insensitive
+    alias rgf="rg --files | rg"  # search filenames
+fi
+
+# tealdeer/tldr (simplified man pages)
+if command -v tldr &>/dev/null; then
+    alias help="tldr"
+fi
+
 # Directory shortcuts (customize these for your setup)
 alias dl="cd ~/Downloads"
 alias dt="cd ~/Desktop"
@@ -94,6 +151,32 @@ alias gr="git remote"
 alias grv="git remote -v"
 alias gra="git remote add"
 alias grr="git remote remove"
+
+# ==========================================
+# GITHUB CLI ALIASES
+# ==========================================
+
+if command -v gh &>/dev/null; then
+    # PR management
+    alias ghpr="gh pr list"
+    alias ghprc="gh pr create"
+    alias ghprv="gh pr view"
+    alias ghprco="gh pr checkout"
+    alias ghprm="gh pr merge"
+
+    # Issue management
+    alias ghi="gh issue list"
+    alias ghic="gh issue create"
+    alias ghiv="gh issue view"
+
+    # Repo management
+    alias ghrc="gh repo clone"
+    alias ghrv="gh repo view -w"
+
+    # Actions
+    alias gha="gh run list"
+    alias ghaw="gh run watch"
+fi
 
 # ==========================================
 # DOCKER ALIASES

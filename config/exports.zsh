@@ -284,6 +284,33 @@ if command -v rg &> /dev/null; then
 fi
 
 # ==========================================
+# ZOXIDE CONFIGURATION
+# ==========================================
+
+# Initialize zoxide (smarter cd replacement)
+if command -v zoxide &> /dev/null; then
+    eval "$(zoxide init zsh)"
+fi
+
+# ==========================================
+# STARSHIP CONFIGURATION
+# ==========================================
+
+# Initialize starship prompt (if installed)
+if command -v starship &> /dev/null; then
+    eval "$(starship init zsh)"
+fi
+
+# ==========================================
+# MISE CONFIGURATION
+# ==========================================
+
+# Initialize mise (runtime manager)
+if command -v mise &> /dev/null; then
+    eval "$(mise activate zsh)"
+fi
+
+# ==========================================
 # APPLICATION SPECIFIC
 # ==========================================
 

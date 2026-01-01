@@ -1,0 +1,68 @@
+# Starship Prompt Configuration
+
+format = """
+$username\
+$hostname\
+$directory\
+$git_branch\
+$git_state\
+$git_status\
+$docker_context\
+$kubernetes\
+$aws\
+$python\
+$nodejs\
+$rust\
+$cmd_duration\
+$line_break\
+$character"""
+
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
+
+[directory]
+truncation_length = 4
+truncate_to_repo = true
+style = "bold cyan"
+
+[git_branch]
+format = "[$symbol$branch]($style) "
+symbol = " "
+style = "bold purple"
+
+[git_status]
+format = '([$all_status$ahead_behind]($style) )'
+style = "bold red"
+
+[aws]
+format = '[$symbol($profile )(\($region\) )]($style)'
+symbol = " "
+style = "bold yellow"
+disabled = false
+
+[kubernetes]
+format = '[$symbol$context( \($namespace\))]($style) '
+symbol = "⎈ "
+disabled = false
+
+[docker_context]
+format = "[$symbol$context]($style) "
+symbol = " "
+disabled = false
+
+[python]
+format = '[${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
+symbol = " "
+
+[nodejs]
+format = "[$symbol($version )]($style)"
+symbol = " "
+
+[rust]
+format = "[$symbol($version )]($style)"
+symbol = " "
+
+[cmd_duration]
+min_time = 2_000
+format = "took [$duration](bold yellow) "

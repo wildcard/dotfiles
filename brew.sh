@@ -106,6 +106,15 @@ brew install eza        # Modern ls replacement (successor to exa)
 brew install git-delta  # Better git diff viewer
 brew install jq         # JSON processor
 brew install httpie     # User-friendly HTTP client
+brew install zoxide     # Smarter cd command
+brew install procs      # Better ps
+brew install bottom     # Better top/htop
+brew install tealdear   # Simplified man pages (tldr)
+brew install hyperfine  # Command benchmarking
+brew install sd         # Better sed
+brew install starship   # Cross-shell prompt
+brew install gh         # GitHub CLI
+brew install mise       # Unified runtime manager
 
 # Install fzf key bindings and fuzzy completion
 $(brew --prefix)/opt/fzf/install --all --no-bash --no-fish

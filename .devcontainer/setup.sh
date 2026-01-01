@@ -6,7 +6,7 @@ if [[ -n "${CODESPACES:-}" ]]; then
     echo "Running in GitHub Codespaces environment"
 fi
 
-# Install modern CLI tools via apt
+# Install modern CLI tools via apt and cargo
 install_apt_packages() {
     echo "Installing apt packages..."
     sudo apt-get update
@@ -22,7 +22,9 @@ install_apt_packages() {
         unzip \
         jq \
         tree \
-        htop
+        htop \
+        cargo \
+        build-essential
 
     # Create symlinks for tools with different binary names on Debian/Ubuntu
     # fd is named fdfind on Debian/Ubuntu
@@ -33,6 +35,73 @@ install_apt_packages() {
     # bat is named batcat on Debian/Ubuntu
     if command -v batcat &>/dev/null && ! command -v bat &>/dev/null; then
         sudo ln -sf "$(which batcat)" /usr/local/bin/bat
+    fi
+}
+
+# Install Rust-based tools via cargo (not available in apt)
+install_cargo_tools() {
+    echo "Installing Rust-based CLI tools..."
+
+    # zoxide (smarter cd)
+    if ! command -v zoxide &>/dev/null; then
+        cargo install zoxide
+    fi
+
+    # procs (better ps)
+    if ! command -v procs &>/dev/null; then
+        cargo install procs
+    fi
+
+    # bottom (better top/htop)
+    if ! command -v btm &>/dev/null; then
+        cargo install bottom
+    fi
+
+    # tealdeer (tldr pages)
+    if ! command -v tldr &>/dev/null; then
+        cargo install tealdeer
+        # Update tldr cache
+        tldr --update || true
+    fi
+
+    # hyperfine (benchmarking)
+    if ! command -v hyperfine &>/dev/null; then
+        cargo install hyperfine
+    fi
+
+    # sd (better sed)
+    if ! command -v sd &>/dev/null; then
+        cargo install sd
+    fi
+}
+
+# Install GitHub CLI (official apt repo)
+install_github_cli() {
+    echo "Installing GitHub CLI..."
+    if ! command -v gh &>/dev/null; then
+        curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+        sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+        sudo apt-get update
+        sudo apt-get install -y gh
+    fi
+}
+
+# Install starship prompt
+install_starship() {
+    echo "Installing Starship prompt..."
+    if ! command -v starship &>/dev/null; then
+        curl -sS https://starship.rs/install.sh | sh -s -- -y
+    fi
+}
+
+# Install mise (runtime manager)
+install_mise() {
+    echo "Installing mise..."
+    if ! command -v mise &>/dev/null; then
+        curl https://mise.run | sh
+        # Add mise to PATH for current session
+        export PATH="$HOME/.local/bin:$PATH"
     fi
 }
 
@@ -97,10 +166,19 @@ main() {
 
     install_apt_packages
     install_eza
+    install_cargo_tools
+    install_github_cli
+    install_starship
+    install_mise
     install_zsh_plugins
     setup_dotfiles
 
     echo "Setup complete!"
+    echo "Installed tools:"
+    echo "  Core: rg, bat, fd, fzf, eza, delta, jq"
+    echo "  Extended: zoxide, procs, bottom, tldr, hyperfine, sd"
+    echo "  Dev: gh, starship, mise"
+    echo ""
     echo "Restart your shell or run: exec zsh"
 }
 
