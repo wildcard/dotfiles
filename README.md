@@ -1,16 +1,99 @@
 # 🔐 Secure Dotfiles
 
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=wildcard/dotfiles)
+
 A comprehensive, security-first dotfiles configuration for modern development workflows. Built with Zsh, Oh My Zsh, and modular architecture for maximum productivity and security.
+
+**Features:** Modern CLI tools (ripgrep, bat, eza, delta, fzf) • GitHub Codespaces ready • Cross-platform (macOS/Linux/WSL) • Security-first design
 
 ## ⚡ Quick Start
 
+### Option 1: GitHub Codespaces (Fastest)
+
+Click the badge above or:
+
+```bash
+# Creates a fully configured development environment in ~3 minutes
+# with all modern tools pre-installed
+gh codespace create --repo wildcard/dotfiles
+```
+
+### Option 2: Local Installation
+
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/dotfiles.git
+git clone https://github.com/wildcard/dotfiles.git
 cd dotfiles
 
 # Run the secure installation script
 ./install.sh
+
+# Install modern CLI tools (macOS)
+./brew.sh
+```
+
+## ☁️ GitHub Codespaces
+
+This repository is optimized for **GitHub Codespaces** with automatic setup of:
+
+- ✅ **Zsh + Oh My Zsh** with custom plugins
+- ✅ **17 modern CLI tools** installed and configured
+- ✅ **VS Code extensions** for enhanced development
+- ✅ **Git delta** for beautiful diffs
+- ✅ **Starship prompt** (optional)
+
+**Launch a Codespace** and everything is ready in ~3 minutes. No manual configuration required!
+
+### What's Included in Codespaces
+
+| Category | Tools |
+|----------|-------|
+| **Search & Navigation** | ripgrep, fd, fzf, zoxide |
+| **File Viewing** | bat, eza |
+| **Git Integration** | delta, gh |
+| **System Monitoring** | procs, bottom |
+| **Development** | jq, httpie, mise, starship |
+| **Utilities** | tldr, hyperfine, sd |
+
+## 🚀 Modern CLI Tools
+
+This configuration includes best-in-class modern CLI tools that replace traditional Unix commands with faster, more user-friendly alternatives:
+
+### Core Replacements
+
+| Traditional | Modern | Improvement |
+|-------------|--------|-------------|
+| `grep` | **ripgrep** (`rg`) | 5-10x faster, respects .gitignore |
+| `cat` | **bat** | Syntax highlighting, line numbers, git integration |
+| `find` | **fd** | 2-5x faster, simpler syntax, colored output |
+| `ls` | **eza** | Icons, git status, tree view |
+| `sed` | **sd** | Simpler syntax, safer replacements |
+| `cd` | **zoxide** (`z`) | Frecency-based navigation |
+| `ps` | **procs** | Tree view, better formatting |
+| `top` | **bottom** (`btm`) | Modern TUI, better visuals |
+
+### Enhanced Development Tools
+
+- **delta**: Beautiful side-by-side git diffs with syntax highlighting
+- **fzf**: Fuzzy finder with bat preview integration
+- **gh**: GitHub CLI for issues, PRs, and repositories
+- **httpie**: User-friendly HTTP client with JSON support
+- **jq**: JSON processor for parsing and manipulation
+- **tldr**: Simplified man pages with practical examples
+- **hyperfine**: Command benchmarking tool
+- **mise**: Unified runtime version manager (Node, Python, Ruby, etc.)
+- **starship**: Fast, customizable cross-shell prompt
+
+### Smart Aliases
+
+All modern tools have smart fallbacks - if not installed, commands fall back to traditional tools:
+
+```bash
+ls      # Uses eza if installed, falls back to GNU ls
+cat     # Uses bat if installed, falls back to cat
+grep    # Uses ripgrep if installed, falls back to grep
+find    # Uses fd if installed, falls back to find
+cd      # Uses zoxide (z) if installed, falls back to cd
 ```
 
 ## 🛡️ Security Features
@@ -25,20 +108,28 @@ cd dotfiles
 
 ```
 dotfiles/
-├── .zshrc                    # Main Zsh configuration
-├── .secrets.template         # Template for secure secrets
-├── .gitignore.global        # Global Git ignore patterns
-├── install.sh               # Secure installation script
-├── config/                  # Modular configuration
-│   ├── aliases.zsh          # Git, Docker, K8s, AWS shortcuts
-│   ├── exports.zsh          # Environment variables
-│   ├── functions.zsh        # Utility functions
-│   ├── aws.zsh             # AWS profile management
-│   ├── docker.zsh          # Docker utilities
-│   ├── kubernetes.zsh      # Kubernetes helpers
-│   ├── node.zsh            # Node.js/FNM management
-│   └── python.zsh          # Python/Pyenv setup
-└── README.md               # This file
+├── .devcontainer/           # GitHub Codespaces configuration
+│   ├── devcontainer.json   # Container definition
+│   └── setup.sh            # Automated setup script
+├── .zshrc                   # Main Zsh configuration
+├── .secrets.template        # Template for secure secrets
+├── .gitignore.global       # Global Git ignore patterns
+├── .gitconfig              # Git configuration with delta
+├── .ripgreprc              # Ripgrep configuration
+├── install.sh              # Secure installation script
+├── brew.sh                 # Homebrew package installer (macOS)
+├── config/                 # Modular configuration
+│   ├── aliases.zsh         # Modern tool aliases + fallbacks
+│   ├── exports.zsh         # Environment variables + tool init
+│   ├── functions.zsh       # Utility functions
+│   ├── starship.toml       # Starship prompt config
+│   ├── aws.zsh            # AWS profile management
+│   ├── docker.zsh         # Docker utilities
+│   ├── kubernetes.zsh     # Kubernetes helpers
+│   ├── node.zsh           # Node.js/FNM management
+│   └── python.zsh         # Python/Pyenv setup
+├── TESTING.md             # Comprehensive testing plan
+└── README.md              # This file
 ```
 
 ## 🔧 Features
@@ -54,10 +145,13 @@ dotfiles/
 
 ### Productivity Enhancements
 
-- **Smart Aliases**: Git shortcuts, Docker commands, K8s operations
+- **Modern CLI Tools**: 17 fast, user-friendly replacements for traditional Unix commands
+- **Smart Aliases**: Automatic fallbacks to traditional tools if modern tools not installed
 - **Utility Functions**: Backup, extract, environment info, security checks
-- **Cross-Platform**: macOS, Linux, and cloud environment support
+- **Cross-Platform**: macOS, Linux, WSL, and GitHub Codespaces support
 - **Performance Optimized**: Lazy loading and efficient startup
+- **Beautiful Diffs**: Git delta integration with side-by-side view
+- **Fuzzy Finding**: FZF with bat/eza previews for files and directories
 
 ### Security Features
 
@@ -72,9 +166,27 @@ dotfiles/
 
 - Git
 - Curl
-- A Unix-like operating system (macOS, Linux, WSL)
+- A Unix-like operating system (macOS, Linux, WSL, or GitHub Codespaces)
 
-### Automatic Installation
+### Option 1: GitHub Codespaces (Recommended)
+
+**Zero configuration required!** Just create a Codespace:
+
+```bash
+gh codespace create --repo wildcard/dotfiles
+# or click the badge at the top of this README
+```
+
+The devcontainer automatically:
+- ✅ Installs Zsh + Oh My Zsh
+- ✅ Installs all 17 modern CLI tools
+- ✅ Configures shell with all aliases and functions
+- ✅ Sets up Git with delta integration
+- ✅ Initializes starship prompt and zoxide
+
+**Ready to use in ~3 minutes!**
+
+### Option 2: Local Installation (macOS/Linux)
 
 The installation script will:
 
@@ -83,13 +195,18 @@ The installation script will:
 3. Install Oh My Zsh and plugins
 4. Create secure symlinks for dotfiles
 5. Set up `.secrets` file with proper permissions
-6. Configure Git with global settings
+6. Configure Git with delta integration
 7. Optionally install development tools (FNM, Pyenv)
 8. Optionally set Zsh as default shell
 
 ```bash
 ./install.sh
+
+# Install modern CLI tools (macOS only)
+./brew.sh
 ```
+
+**Note:** Linux users can install tools via apt/cargo. See [TESTING.md](TESTING.md) for details.
 
 ### Manual Installation
 
@@ -184,12 +301,21 @@ PYTHONDONTWRITEBYTECODE=1                  # Don't create .pyc files
 Essential aliases for daily development:
 
 ```bash
+# Modern CLI tools (with smart fallbacks)
+ls="eza --icons"              # Modern ls with icons (fallback: ls)
+cat="bat --paging=never"      # Syntax highlighting (fallback: cat)
+grep="rg"                     # Fast search (fallback: grep)
+find="fd"                     # Fast find (fallback: find)
+cd="z"                        # Smart cd with frecency (fallback: cd)
+top="btm"                     # Better system monitor (fallback: top)
+
 # Git shortcuts
 gs="git status"
 ga="git add"
 gc="git commit"
 gp="git push"
 gl="git pull"
+gd="git diff"                 # Uses delta for beautiful diffs
 
 # Docker management
 d="docker"
@@ -203,6 +329,10 @@ kctx="kubectl config use-context"
 
 # AWS
 awsp="aws-switch"             # Interactive profile switcher
+
+# Utilities
+lt="eza --tree --level=2"     # Tree view
+help="tldr"                   # Quick command examples
 ```
 
 ### Functions
@@ -326,10 +456,14 @@ The modular architecture makes customization easy:
 
 The configuration automatically detects and adapts to:
 
-- **macOS**: Uses Homebrew paths, macOS-specific commands
-- **Linux**: Uses appropriate package managers and paths
-- **WSL**: Handles Windows Subsystem for Linux specifics
-- **Cloud Environments**: Detects Codespaces, devcontainers
+- **macOS**: Uses Homebrew paths (/opt/homebrew or /usr/local), macOS-specific commands
+- **Linux**: Uses apt/cargo for package management, Linux-specific paths
+- **WSL**: Handles Windows Subsystem for Linux specifics, integrates with Windows
+- **GitHub Codespaces**: Automatically detected via $CODESPACES variable
+  - Disables macOS-only plugins (1password, ssh-agent)
+  - Uses Linux Homebrew path (/home/linuxbrew/.linuxbrew)
+  - Sets BROWSER=echo to prevent browser opening
+  - Runs in non-interactive mode for automated setup
 
 ## 🐛 Troubleshooting
 
@@ -409,9 +543,13 @@ source ~/.zshrc
 system-update
 
 # Update specific tools
-brew upgrade                  # macOS
-npm update -g                # Node.js packages
-pip install --upgrade pip    # Python packages
+brew upgrade                  # macOS (includes modern CLI tools)
+cargo install-update -a       # Rust tools (procs, bottom, etc.)
+npm update -g                 # Node.js packages
+pip install --upgrade pip     # Python packages
+
+# Update modern tools manually (if needed)
+cargo install ripgrep bat fd-find procs bottom tealdeer hyperfine sd zoxide --force
 ```
 
 ### Regular Maintenance
@@ -462,13 +600,59 @@ MIT License - feel free to use and modify as needed.
 3. Test your changes thoroughly
 4. Submit a pull request
 
+## 🧪 Testing
+
+See [TESTING.md](TESTING.md) for comprehensive testing instructions covering:
+- GitHub Codespaces validation
+- Local macOS testing
+- Fresh installation verification
+- Tool-specific tests (ripgrep, bat, delta, fzf)
+- Performance benchmarks
+
+## 📊 Performance Comparison
+
+Modern tools are significantly faster than traditional equivalents:
+
+```bash
+# Benchmark search (ripgrep vs grep)
+hyperfine 'rg "TODO" .' 'grep -r "TODO" .'
+# Result: ripgrep is ~10x faster on large codebases
+
+# Benchmark find (fd vs find)
+hyperfine 'fd ".*\.js$"' 'find . -name "*.js"'
+# Result: fd is ~3x faster
+
+# Beautiful git diffs
+git diff  # Uses delta with syntax highlighting and side-by-side view
+```
+
 ## 📚 Additional Resources
 
+### Documentation
 - [Oh My Zsh Documentation](https://ohmyz.sh/)
 - [Zsh Manual](http://zsh.sourceforge.net/Doc/)
 - [Security Best Practices for Dotfiles](https://github.com/thoughtbot/dotfiles)
 - [1Password CLI Documentation](https://developer.1password.com/docs/cli/)
 
+### Modern CLI Tools
+- [ripgrep](https://github.com/BurntSushi/ripgrep) - Fast grep alternative
+- [bat](https://github.com/sharkdp/bat) - Cat with syntax highlighting
+- [fd](https://github.com/sharkdp/fd) - Fast find alternative
+- [eza](https://github.com/eza-community/eza) - Modern ls replacement
+- [delta](https://github.com/dandavison/delta) - Beautiful git diffs
+- [fzf](https://github.com/junegunn/fzf) - Fuzzy finder
+- [zoxide](https://github.com/ajeetdsouza/zoxide) - Smarter cd
+- [starship](https://starship.rs/) - Cross-shell prompt
+- [mise](https://mise.jdx.dev/) - Runtime version manager
+
 ---
 
 **Remember**: Security is a journey, not a destination. Regularly review and update your configuration to maintain security best practices.
+
+## ⭐ What's Next?
+
+1. **Try it in Codespaces**: Click the badge at the top for instant setup
+2. **Install locally**: Run `./install.sh` and `./brew.sh`
+3. **Explore modern tools**: Run `eza -la`, `bat README.md`, `rg "TODO" .`
+4. **Customize**: Edit `config/*.zsh` files to add your own aliases and functions
+5. **Share**: Fork and adapt to your workflow!
