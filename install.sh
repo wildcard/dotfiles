@@ -551,11 +551,15 @@ main() {
     echo "  • Optionally set Zsh as default shell"
     echo
 
-    read -p "Continue with installation? (y/N): " -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        log "INFO" "Installation cancelled"
-        exit 0
+    if [[ "$INTERACTIVE" == "true" ]]; then
+        read -p "Continue with installation? (y/N): " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            log "INFO" "Installation cancelled"
+            exit 0
+        fi
+    else
+        log "INFO" "Non-interactive mode: proceeding with installation automatically"
     fi
 
     # Create backup
