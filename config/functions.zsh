@@ -109,7 +109,8 @@ git-cleanup() {
     fi
 }
 
-# Git push with upstream tracking
+# Git push with upstream tracking (unalias first - oh-my-zsh git plugin defines gpu)
+unalias gpu 2>/dev/null
 gpu() {
     local branch=$(git rev-parse --abbrev-ref HEAD)
     echo "🚀 Pushing $branch with upstream tracking..."
@@ -177,7 +178,7 @@ env-info() {
     echo "🔒 Security Status:"
     echo "=================="
     if [[ -f "$HOME/.secrets" ]]; then
-        local perms=$(stat -f "%A" "$HOME/.secrets" 2>/dev/null || stat -c "%a" "$HOME/.secrets" 2>/dev/null)
+        local perms=$(stat -c "%a" "$HOME/.secrets" 2>/dev/null || stat -f "%A" "$HOME/.secrets" 2>/dev/null)
         if [[ "$perms" == "600" ]]; then
             echo "✅ .secrets file permissions: $perms (secure)"
         else

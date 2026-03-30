@@ -57,7 +57,6 @@ if [[ "${IS_CODESPACE:-false}" == "true" ]]; then
         python
         node
         z
-        tmux
         zsh-autosuggestions
         zsh-syntax-highlighting
     )
@@ -71,12 +70,16 @@ else
         python
         node
         z
-        tmux
         1password
         ssh-agent
         zsh-autosuggestions
         zsh-syntax-highlighting
     )
+fi
+
+# Only load tmux plugin if tmux is installed
+if command -v tmux &>/dev/null; then
+    plugins+=(tmux)
 fi
 
 # SSH-Agent configuration
@@ -160,7 +163,7 @@ fi
 # Load secrets file if it exists and has secure permissions
 if [[ -f "$HOME/.secrets" ]]; then
     # Check file permissions (should be 600)
-    local secrets_perms=$(stat -f "%A" "$HOME/.secrets" 2>/dev/null || stat -c "%a" "$HOME/.secrets" 2>/dev/null)
+    local secrets_perms=$(stat -c "%a" "$HOME/.secrets" 2>/dev/null || stat -f "%A" "$HOME/.secrets" 2>/dev/null)
     if [[ "$secrets_perms" == "600" ]]; then
         source "$HOME/.secrets"
     else
