@@ -115,7 +115,7 @@ alias gc="git commit"
 alias gcm="git commit -m"
 alias gca="git commit -am"
 alias gp="git push"
-alias gpu="git push -u origin"
+# gpu - handled by function in functions.zsh (adds branch detection)
 alias gl="git pull"
 alias gf="git fetch"
 
@@ -229,7 +229,7 @@ alias kdd="kubectl describe deployment"
 # kubectl logs and exec
 alias klog="kubectl logs"
 alias klogf="kubectl logs -f"
-alias kexec="kubectl exec -it"
+# kexec - handled by function in kubernetes.zsh (adds pod listing, namespace support)
 alias ksh="kubectl exec -it"
 
 # kubectl apply and delete
@@ -251,7 +251,7 @@ alias kuse="kubectl config use-context"
 # ==========================================
 
 # AWS CLI basics
-alias aws-whoami="aws sts get-caller-identity"
+# aws-whoami - handled by function in aws.zsh (adds formatted output)
 alias aws-regions="aws ec2 describe-regions --query 'Regions[].RegionName' --output table"
 
 # AWS profile management (enhanced by aws.zsh)
@@ -276,7 +276,7 @@ alias activate="source venv/bin/activate"
 alias deactivate="deactivate"
 
 # Python package management
-alias pip-upgrade="pip install --upgrade pip"
+# pip-upgrade - handled by function in python.zsh (upgrades multiple packages)
 alias pip-freeze="pip freeze > requirements.txt"
 alias pip-install-req="pip install -r requirements.txt"
 
